@@ -5,42 +5,50 @@ from scipy import sparse, io
 
 contents=[]
 
-f = open("train.txt","r")
-
+f = open("train1.txt","r")
+labels=""
 for line in f:
     line= line.rstrip()
-    contents.append(line)
+    line=line.split("###")
+    # print(line[0])
+    contents.append(line[1])
+    labels = labels + line[0] + "\n"
+    # contents.append(line)
 
 f.close()
-
+print(type(contents))
 print(len(contents))
+f = open("label.txt", "w+")
+f.write(labels)
+f.close()
 
-vectorizer = CountVectorizer(min_df = 0.0005, max_df = 0.90)
-X = vectorizer.fit_transform(contents)
+cv = CountVectorizer(min_df = 0.0005, max_df = 0.90)
+X = cv.fit_transform(contents)
 io.mmwrite('train.mtx', X)
-Y = vectorizer.get_feature_names()
+Y = cv.get_feature_names()
 
-# print(len(Y))
-# print(X.shape)
+#tinh idf
+tfidf_transformer=TfidfTransformer(smooth_idf=True,use_idf=True)
+tfidf_transformer.fit(X)
+df_idf = pd.DataFrame(tfidf_transformer.idf_, index=Y,columns=["idf_weights"])
+df_idf=df_idf.sort_values(by=['idf_weights'])
+print(df_idf)
 
-# tfidf_transformer=TfidfTransformer(smooth_idf=True,use_idf=True)
-# tfidf_transformer.fit(X)
-# df_idf = pd.DataFrame(tfidf_transformer.idf_, index=Y,columns=["idf_weights"])
-# print(df_idf)
 
-# dense=X.todense()
-# denselist=dense.tolist()
-# df = pd.DataFrame(denselist, columns=Y)
+#tfidf
+count_vector=cv.transform(contents)
+tfidf_vector=tfidf_transformer.transform(count_vector)
+
+first_document_vector=tfidf_vector[0]
+df = pd.DataFrame(first_document_vector.T.todense(), index=Y, columns=["tfidf"])
+df=df.sort_values(by=["tfidf"],ascending=False)
 # print(df)
-
-
 
 f = open("vocab_train.txt", "w+")
 
 vocab = ""
 for i in Y:
     i = i + '\n'
-    #print(i)
     vocab = vocab + i
 
 f.write(vocab)

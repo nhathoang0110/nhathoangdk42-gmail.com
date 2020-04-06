@@ -35,9 +35,8 @@ def docfile(file1):
             array2.append(stemmer.stem(word))
     
     
-    tf = np.unique(array2, return_counts = True)[1].tolist()         #bo lap
+    tf = np.unique(array2, return_counts = True)[1].tolist()         #bo tu lap
     value = np.unique(array2, return_counts = True)[0].tolist()
-
     str=' '.join(value)
     return str
 
@@ -57,6 +56,7 @@ def solve(path):
             s= docfile(files[j])
             s= str(i)+"###" + s + "\n"
             contents=contents+s
+        break
     return contents    
 
 contents_train=solve(path_train)
