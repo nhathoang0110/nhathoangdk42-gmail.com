@@ -24,7 +24,7 @@ f.close()
 tfidf_vectorizer = TfidfVectorizer(min_df = 0.0005, max_df = 0.90)
 train = tfidf_vectorizer.fit_transform(contents)
 print(train.shape)
-io.mmwrite('train.mtx', train)
+# io.mmwrite('train.mtx', train)
 voc = tfidf_vectorizer.get_feature_names()
 print(len(voc))
 
@@ -47,18 +47,18 @@ print(df)
 # df=df.sort_values(by=["tfidf"],ascending=False)
 # # print(df)
 
-f = open("vocab_train.txt", "w+")
+# f = open("vocab_train.txt", "w+")
 
-vocab = ""
-for i in voc:
-    i = i + '\n'
-    vocab = vocab + i
+# vocab = ""
+# for i in voc:
+#     i = i + '\n'
+#     vocab = vocab + i
 
-f.write(vocab)
-f.close()
+# f.write(vocab)
+# f.close()
 
 
-#####################################
+# #####################################
 
 f = open("test.txt", "r")
 contents_test=[]
